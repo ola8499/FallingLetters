@@ -22,8 +22,6 @@ public class SpadajaceElementy<object> extends JPanel implements MouseListener {
     private static final double INCREMENT = 3;
     private List<Shape> shapes;
     private List<String> colors;
-    boolean add;
-    boolean sub;
     int clickX;
     int clickY;
     public Timer timer = null;
@@ -49,8 +47,9 @@ public class SpadajaceElementy<object> extends JPanel implements MouseListener {
     boolean word4 = false;
     boolean word5 = false;
     boolean word6 = false;
-    boolean dodany = true;
-    boolean odjety = false;
+    boolean word7 = false;
+    boolean word8 = false;
+    boolean word9 = false;
     JLabel nextlvl = new JLabel();
     LocalDateTime then = LocalDateTime.now();
     boolean tak = true;
@@ -70,6 +69,7 @@ public class SpadajaceElementy<object> extends JPanel implements MouseListener {
     JLabel heartslab3 = new JLabel(new ImageIcon(hearts3));
     Font czcionka = new Font("Bauhaus 93", Font.BOLD, 18);
     JPanel szansa = new JPanel();
+    int a;
 
     public SpadajaceElementy() throws IOException {
 
@@ -316,7 +316,7 @@ public class SpadajaceElementy<object> extends JPanel implements MouseListener {
         Color color;
         String letters;
         Integer i;
-        int a = 0;
+
 
         public Shape(int randszer, int randomDelayedStart, Color color, String letters, Integer i) {
 
@@ -356,88 +356,50 @@ public class SpadajaceElementy<object> extends JPanel implements MouseListener {
             if (word1) {
                 if ((clickX >= randszer) && (clickX <= randszer + 60) && (clickY >= y) && (clickY <= y + 60)) {
                     if ((poziom1.get(i) == "O")) {
-                        if (odjety = true) {
-                            a = 0;
-                            punkty.setText("PUNKTY " + a);
-                            dodany = true;
-                            odjety = false;
-                        }
-                        if (dodany) {
-                            a = 1;
-                            punkty.setText("PUNKTY " + a);
-                            dodany = false;
-                            odjety = true;
-                        }
-                        try
-                        {
+                        a += 1;
+                        punkty.setText("PUNKTY " + a);
+                        try {
                             Clip clip = AudioSystem.getClip();
                             clip.open(AudioSystem.getAudioInputStream(new File("C:\\Users\\HP NoteBook\\IdeaProjects\\Falling Letters\\pozytywny.wav")));
                             clip.start();
-                        }
-                        catch (Exception exc)
-                        {
+                        } catch (Exception exc) {
                             exc.printStackTrace(System.out);
                         }
                         WORD.setText("DOG");
                         word2 = true;
                         WORD.setText("BA_L");
                         word1 = false;
-                        draw = false;
-                        System.out.println("LEVEL1: " + level1 + " word2 " + word2);
-
-
                         jpegi.remove(picLabel1);
                         jpegi.add(picLabel2);
                     }
                     if ((poziom1.get(i) != "O")) {
                         a -= 1;
                         punkty.setText("PUNKTY " + a);
-                        odjety = true;
-                        try
-                        {
+                        try {
                             Clip clip = AudioSystem.getClip();
                             clip.open(AudioSystem.getAudioInputStream(new File("C:\\Users\\HP NoteBook\\IdeaProjects\\Falling Letters\\negatywny.wav")));
                             clip.start();
-                        }
-                        catch (Exception exc)
-                        {
+                        } catch (Exception exc) {
                             exc.printStackTrace(System.out);
                         }
-                        shapes = createShapeList();
-                        timer.restart();
                     }
                 }
             }
             if (word2) {
                 if ((clickX >= randszer) && (clickX <= randszer + 60) && (clickY >= y) && (clickY <= y + 60)) {
                     if ((poziom1.get(i) == "L")) {
-                        if (dodany) {
-                            //a = 2;
-                            punkty.setText("PUNKTY " + a);
-                            dodany=true;
-                            odjety = false;
-                        }
-                        if ((odjety) || (add)) {
-                            //a = 1;
-                            punkty.setText("PUNKTY " + a);
-                            odjety = true;
-                            dodany = false;
-                        }
-                        if(sub){
-                            //a = 0;
-                            punkty.setText("PUNKTY " + a);
-                            sub = true;
-                        }
-                        try
-                        {
+
+                        a += 1;
+                        punkty.setText("PUNKTY " + a);
+
+                        try {
                             Clip clip = AudioSystem.getClip();
                             clip.open(AudioSystem.getAudioInputStream(new File("C:\\Users\\HP NoteBook\\IdeaProjects\\Falling Letters\\pozytywny.wav")));
                             clip.start();
-                        }
-                        catch (Exception exc)
-                        {
+                        } catch (Exception exc) {
                             exc.printStackTrace(System.out);
                         }
+
                         WORD.setText("BALL");
                         word3 = true;
                         WORD.setText("_KI");
@@ -447,24 +409,15 @@ public class SpadajaceElementy<object> extends JPanel implements MouseListener {
                     }
                 }
                 if ((poziom1.get(i) != "L")) {
-                    if (dodany) {
-                        //a = 3;
-                        punkty.setText("PUNKTY " + a);
-                        add = true;
-                    }
-                    if (odjety) {
-                        //a = 1;
-                        punkty.setText("PUNKTY " + a);
-                        sub = true;
-                    }
-                    try
-                    {
+
+                    a -= 1;
+                    punkty.setText("PUNKTY " + a);
+
+                    try {
                         Clip clip = AudioSystem.getClip();
-                        clip.open(AudioSystem.getAudioInputStream(new File("C:\\Users\\HP NoteBook\\IdeaProjects\\Falling Letters\\pozytywny.wav")));
+                        clip.open(AudioSystem.getAudioInputStream(new File("C:\\Users\\HP NoteBook\\IdeaProjects\\Falling Letters\\negatywny.wav")));
                         clip.start();
-                    }
-                    catch (Exception exc)
-                    {
+                    } catch (Exception exc) {
                         exc.printStackTrace(System.out);
                     }
                 }
@@ -481,14 +434,11 @@ public class SpadajaceElementy<object> extends JPanel implements MouseListener {
                         word3 = false;
                         level1 = false;
                         tak = true;
-                        try
-                        {
+                        try {
                             Clip clip = AudioSystem.getClip();
                             clip.open(AudioSystem.getAudioInputStream(new File("C:\\Users\\HP NoteBook\\IdeaProjects\\Falling Letters\\pozytywny.wav")));
                             clip.start();
-                        }
-                        catch (Exception exc)
-                        {
+                        } catch (Exception exc) {
                             exc.printStackTrace(System.out);
                         }
                         jpegi.remove(picLabel3);
@@ -496,82 +446,103 @@ public class SpadajaceElementy<object> extends JPanel implements MouseListener {
                         WORD.setText("_OU_E");
                     }
                     if ((poziom1.get(i) != "S")) {
-
+                        try {
+                            Clip clip = AudioSystem.getClip();
+                            clip.open(AudioSystem.getAudioInputStream(new File("C:\\Users\\HP NoteBook\\IdeaProjects\\Falling Letters\\negatywny.wav")));
+                            clip.start();
+                        } catch (Exception exc) {
+                            exc.printStackTrace(System.out);
+                        }
                     }
                 }
             }
             if (word4) {
                 if ((clickX >= randszer) && (clickX <= randszer + 60) && (clickY >= y) && (clickY <= y + 60)) {
-                    if ((poziom1.get(i) == "M")) {
+                    if ((poziom1.get(i).equals("M"))) {
                         a += 4;
                         punkty.setText("PUNKTY " + a);
                         WORD.setText("MOU_E");
-                        System.out.println("trafiony: " + poziom1.get(i));
-                        System.out.println("wartosc a: " + a);
-                        if ((clickX >= randszer) && (clickX <= randszer + 60) && (clickY >= y) && (clickY <= y + 60)) {
-                            if ((poziom1.get(i) == "S")) {
-                                a += 1;
-                                punkty.setText("PUNKTY " + a);
-                                WORD.setText("MOUSE");
-                                System.out.println("trafiony: " + poziom1.get(i));
-                                System.out.println("wartosc a: " + a);
-                                word5 = true;
-                                WORD.setText("C_ER_Y");
-                                word1 = false;
-                                jpegi.remove(picLabel4);
-                                jpegi.add(picLabel5);
-                            }
+                        try {
+                            Clip clip = AudioSystem.getClip();
+                            clip.open(AudioSystem.getAudioInputStream(new File("C:\\Users\\HP NoteBook\\IdeaProjects\\Falling Letters\\pozytywny.wav")));
+                            clip.start();
+                        } catch (Exception exc) {
+                            exc.printStackTrace(System.out);
+                        }
+                        word5 = true;
+                    }
+                    if(!poziom1.get(i).equals("M")){
+                        try {
+                            Clip clip = AudioSystem.getClip();
+                            clip.open(AudioSystem.getAudioInputStream(new File("C:\\Users\\HP NoteBook\\IdeaProjects\\Falling Letters\\negatywny.wav")));
+                            clip.start();
+                        } catch (Exception exc) {
+                            exc.printStackTrace(System.out);
                         }
                     }
                 }
             }
-
-
             if (word5) {
                 if ((clickX >= randszer) && (clickX <= randszer + 60) && (clickY >= y) && (clickY <= y + 60)) {
-                    if ((poziom1.get(i) == "H")) {
+                    if ((poziom1.get(i) == "S")) {
                         a += 1;
                         punkty.setText("PUNKTY " + a);
+                        WORD.setText("MOUSE");
+                        word6 = true;
                         WORD.setText("C_ER_Y");
-                        System.out.println("trafiony: " + poziom1.get(i));
-                        System.out.println("wartosc a: " + a);
-                        if ((clickX >= randszer) && (clickX <= randszer + 60) && (clickY >= y) && (clickY <= y + 60)) {
-                            if ((poziom1.get(i) == "R")) {
-                                a += 1;
-                                punkty.setText("PUNKTY " + a);
-                                WORD.setText("CHERRY");
-                                word6 = true;
-                                WORD.setText("C_LL_R");
-                                word2 = false;
-                                jpegi.remove(picLabel5);
-                                jpegi.add(picLabel6);
-                            }
-                        }
+                        jpegi.remove(picLabel4);
+                        jpegi.add(picLabel5);
                     }
                 }
             }
 
-            if (word6) {
-                if ((clickX >= randszer) && (clickX <= randszer + 60) && (clickY >= y) && (clickY <= y + 60)) {
-                    if ((poziom1.get(i) == "O")) {
-                        a += 1;
-                        punkty.setText("PUNKTY " + a);
-                        WORD.setText("COLL_R");
-
-                        if ((clickX >= randszer) && (clickX <= randszer + 60) && (clickY >= y) && (clickY <= y + 60)) {
-                            if ((poziom1.get(i) == "A")) {
-
-                                a += 1;
-                                punkty.setText("PUNKTY " + a);
-                                WORD.setText("COLLAR");
-                                word3 = false;
-                            }
+                if (word6) {
+                    if ((clickX >= randszer) && (clickX <= randszer + 60) && (clickY >= y) && (clickY <= y + 60)) {
+                        if ((poziom1.get(i) == "H")) {
+                            a += 1;
+                            punkty.setText("PUNKTY " + a);
+                            WORD.setText("C_ER_Y");
+                            word7 = true;
                         }
                     }
                 }
-            }
+                if (word7) {
+                    if ((clickX >= randszer) && (clickX <= randszer + 60) && (clickY >= y) && (clickY <= y + 60)) {
+                        if ((poziom1.get(i) == "R")) {
+                            a += 1;
+                            punkty.setText("PUNKTY " + a);
+                            WORD.setText("CHERRY");
+                            word8 = true;
+                            WORD.setText("C_LL_R");
+
+                            jpegi.remove(picLabel5);
+                            jpegi.add(picLabel6);
+                        }
+                    }
+                }
+
+                if (word8) {
+                    if ((clickX >= randszer) && (clickX <= randszer + 60) && (clickY >= y) && (clickY <= y + 60)) {
+                        if ((poziom1.get(i) == "O")) {
+                            a += 1;
+                            punkty.setText("PUNKTY " + a);
+                            WORD.setText("COLL_R");
+                            word9 = true;
+                        }
+                    }
+                }
+                if (word9) {
+                    if ((clickX >= randszer) && (clickX <= randszer + 60) && (clickY >= y) && (clickY <= y + 60)) {
+                        if ((poziom1.get(i) == "A")) {
+
+                            a += 1;
+                            punkty.setText("PUNKTY " + a);
+                            WORD.setText("COLLAR");
+                            word3 = false;
+                        }
+                    }
+                }
         }
-
         public void move() {
             if (draw) {
                 y += INCREMENT;
