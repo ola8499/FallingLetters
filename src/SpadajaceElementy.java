@@ -2,6 +2,7 @@ import javax.imageio.ImageIO;
 import javax.sound.sampled.*;
 import javax.swing.*;
 import java.awt.*;
+import java.awt.Color;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
@@ -17,28 +18,27 @@ import java.util.Random;
 
 public class SpadajaceElementy<object> extends JPanel implements MouseListener {
 
-    private static final int D_HEIGHT = 700;
-    public static final int D_WIDTH = 900;
+    private static final int D_HEIGHT = 768;
+    public static final int D_WIDTH = 1024;
     private static final double INCREMENT = 3;
     private List<Shape> shapes;
-    private List<String> colors;
     int clickX;
     int clickY;
     public Timer timer = null;
     Image imgGame;
-    public int ilosc_kulek;
+    public int amount_sphere;
     public String r = "R";
     public int delay = 60;
     boolean clicked = false;
     public String[] letters = {"A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "R", "S", "T", "W", "U", "X", "Y", "Z"};
-    private List<String> poziom1 = new ArrayList<String>();
-    ImageIcon tlo = new ImageIcon("tlo.jpg");
-    JLabel punkty = new JLabel("PUNKTY ");
-    JLabel poziom = new JLabel("POZIOM ");
-    JLabel szanse = new JLabel("SZANSE ");
-    JButton zakoncz = new JButton("Koniec gry", tlo);
+    private List<String> level = new ArrayList<String>();
+    ImageIcon background = new ImageIcon("tlo.jpg");
+    JLabel points = new JLabel("PUNKTY 0");
+    JLabel jl_level = new JLabel("POZIOM I");
+    JLabel chance = new JLabel("SZANSE ");
+    JButton gmover = new JButton("Koniec gry", background);
     JLabel WORD = new JLabel("D_G");
-    JPanel jpegi = new JPanel();
+    JPanel pictures = new JPanel();
     boolean level1 = true;
     boolean level2 = false;
     boolean word1 = true;
@@ -50,75 +50,98 @@ public class SpadajaceElementy<object> extends JPanel implements MouseListener {
     boolean word7 = false;
     boolean word8 = false;
     boolean word9 = false;
+    boolean endgame = false;
     JLabel nextlvl = new JLabel();
-    LocalDateTime then = LocalDateTime.now();
     BufferedImage image1 = ImageIO.read(new File("C:\\Users\\HP NoteBook\\Desktop\\WJP\\imggame\\dog2.jpg"));
     BufferedImage image2 = ImageIO.read(new File("C:\\Users\\HP NoteBook\\Desktop\\WJP\\imggame\\ball2.jpg"));
     BufferedImage image3 = ImageIO.read(new File("C:\\Users\\HP NoteBook\\Desktop\\WJP\\imggame\\ski2.png"));
     BufferedImage image4 = ImageIO.read(new File("C:\\Users\\HP NoteBook\\Desktop\\WJP\\imggame\\mouse2.png"));
     BufferedImage image5 = ImageIO.read(new File("C:\\Users\\HP NoteBook\\Desktop\\WJP\\imggame\\cherry2.png"));
     BufferedImage image6 = ImageIO.read(new File("C:\\Users\\HP NoteBook\\Desktop\\WJP\\imggame\\collar3.png"));
+    BufferedImage image7 = ImageIO.read(new File("C:\\Users\\HP NoteBook\\Desktop\\WJP\\imggame\\smile.jpg"));
     JLabel picLabel1 = new JLabel(new ImageIcon(image1));
     JLabel picLabel2 = new JLabel(new ImageIcon(image2));
     JLabel picLabel3 = new JLabel(new ImageIcon(image3));
     JLabel picLabel4 = new JLabel(new ImageIcon(image4));
     JLabel picLabel5 = new JLabel(new ImageIcon(image5));
     JLabel picLabel6 = new JLabel(new ImageIcon(image6));
-    //BufferedImage hearts3 = ImageIO.read(new File("C:\\Users\\HP NoteBook\\IdeaProjects\\Falling Letters\\obraz.PNG"));
-    //JLabel heartslab3 = new JLabel(new ImageIcon(hearts3));
-    Font czcionka = new Font("Bauhaus 93", Font.BOLD, 18);
-    //JPanel szansa = new JPanel();
+    JLabel picLabel7 = new JLabel(new ImageIcon(image7));
+    Font fontup = new Font("Bauhaus 93", Font.BOLD, 25);
+    Font fontdown = new Font("Bauhaus 93", Font.BOLD, 60);
+    Font fontbttn = new Font("Bauhaus 93", Font.BOLD, 20);
+    JLabel inscr = new JLabel();
+    JLabel result = new JLabel();
+    public static final Color LIGHT_BLUE = new Color(25,94,139);
+    public static final Color LIGHT_PINK = new Color(224, 184, 184);
+    public static final Color color1 = new Color(100, 158, 199, 255);
+    public static final Color color2 = new Color(187, 96, 148);
+    public static final Color color3 = new Color(91, 109, 179);
+    public static final Color color4 = new Color(201, 133, 241);
+    public static final Color color5 = new Color(186, 116, 186);
+    public static final Color color6 = new Color(62, 127, 203, 255);
+    public static final Color color_hearts = new Color(199, 33, 133, 255);
     int a;
     int b;
+    int c;
 
     public SpadajaceElementy() throws IOException {
 
         imgGame = new ImageIcon("chmury.jpg").getImage();
-        jpegi.add(picLabel1);
+        pictures.add(picLabel1);
 
-        this.add(punkty);
-        punkty.setLocation(350, 0);
-        punkty.setSize(100, 70);
-        punkty.setFont(czcionka);
+        this.add(points);
+        points.setLocation(400, 15);
+        points.setSize(150, 70);
+        points.setFont(fontup);
+        points.setForeground(LIGHT_PINK);
 
-        this.add(poziom);
-        poziom.setLocation(20, 0);
-        poziom.setSize(100, 70);
-        poziom.setFont(czcionka);
+        this.add(jl_level);
+        jl_level.setLocation(30, 15);
+        jl_level.setSize(150, 70);
+        jl_level.setFont(fontup);
+        jl_level.setForeground(LIGHT_PINK);
 
-        this.add(szanse);
-        szanse.setLocation(680, 0);
-        szanse.setSize(100, 70);
-        szanse.setFont(czcionka);
+        this.add(chance);
+        chance.setLocation(760, 15);
+        chance.setSize(150, 70);
+        chance.setFont(fontup);
+        chance.setForeground(LIGHT_PINK);
 
-        zakoncz.setHorizontalTextPosition(JButton.CENTER);
-        zakoncz.setVerticalTextPosition(JButton.CENTER);
-        zakoncz.setSize(150, 60);
-        zakoncz.setLocation(700, 600);
-        zakoncz.setFont(czcionka);
-        this.add(zakoncz);
+        gmover.setHorizontalTextPosition(JButton.CENTER);
+        gmover.setVerticalTextPosition(JButton.CENTER);
+        gmover.setSize(150, 45);
+        gmover.setLocation(800, 700);
+        gmover.setFont(fontbttn);
+        gmover.setForeground(LIGHT_BLUE);
+        this.add(gmover);
 
         this.add(WORD);
-        WORD.setLocation(370, 610);
-        WORD.setSize(70, 70);
-        WORD.setFont(czcionka);
+        WORD.setLocation(420, 670);
+        WORD.setSize(230, 70);
+        WORD.setFont(fontdown);
+        WORD.setForeground(LIGHT_BLUE);
 
-        jpegi.setSize(200, 200);
-        jpegi.setLocation(20, 500);
-        this.add(jpegi);
+        pictures.setSize(200, 200);
+        pictures.setLocation(20, 550);
+        this.add(pictures);
 
         this.add(nextlvl);
-        nextlvl.setLocation(350, 250);
+        nextlvl.setLocation(400, 250);
         nextlvl.setSize(100, 70);
 
         this.setLayout(null);
 
-        //this.add(szansa);
-        //szansa.setLocation(740, 20);
-        //szansa.setSize(100, 30);
-        //szansa.add(heartslab3);
+        inscr.setFont(fontdown);
+        inscr.setLocation(320,220);
+        inscr.setSize(500,100);
+        inscr.setForeground(LIGHT_PINK);
+        this.add(inscr);
 
-        colors = createColorList();
+        this.add(result);
+        result.setLocation(220, 420);
+        result.setSize(550, 100);
+        result.setFont(fontdown);
+
         shapes = createShapeList();
         addMouseListener(this);
 
@@ -132,30 +155,46 @@ public class SpadajaceElementy<object> extends JPanel implements MouseListener {
                 }
             }
         });
+
     }
 
-    protected void paintComponent(Graphics g) {
 
-        boolean nie;
+    protected void paintComponent(Graphics g) {
 
         super.paintComponent(g);
         g.drawRect(10, 10, 500, 200);
         g.drawImage(imgGame, 0, 0, null);
         if(b==0){
-            drawHeart(g,760,20,30,30);
-            drawHeart(g,800,20,30,30);
-            drawHeart(g,840,20,30,30);
+            drawHeart(g,860,20,40,45);
+            drawHeart(g,915,20,40,45);
+            drawHeart(g,970,20,40,45);
         }
         if(b==1){
-            drawHeart(g,760,20,30,30);
-            drawHeart(g,800,20,30,30);
+            drawHeart(g,860,20,40,45);
+            drawHeart(g,915,20,40,45);
         }
         if(b==2){
-            drawHeart(g,760,20,30,30);
+            drawHeart(g,860,20,40,45);
         }
         if(b==3){
+            c+=1;
             timer.stop();
-
+            inscr.setText("KONIEC GRY");
+            result.setText("Twój wynik to "+a+"/9");
+            this.remove(chance);
+            this.remove(points);
+            this.remove(WORD);
+            this.remove(pictures);
+            this.remove(jl_level);
+        }
+        if(c==1){
+            try {
+                Clip clip = AudioSystem.getClip();
+                clip.open(AudioSystem.getAudioInputStream(new File("C:\\Users\\HP NoteBook\\IdeaProjects\\Falling Letters\\game-over.wav")));
+                clip.start();
+            } catch (Exception exc) {
+                exc.printStackTrace(System.out);
+            }
         }
 
         for (Shape shape : shapes) {
@@ -167,6 +206,7 @@ public class SpadajaceElementy<object> extends JPanel implements MouseListener {
     public void drawHeart(Graphics g, int x, int y, int width, int height) {
         int[] triangleX = {x - 2*width/18, x + width + 2*width/18, (x - 2*width/18 + x + width + 2*width/18)/2};
         int[] triangleY = {y + height - 2*height/3, y + height - 2*height/3, y + height };
+        g.setColor(color_hearts);
         g.fillOval(x - width/12, y, width/2 + width/6, height/2);
         g.fillOval(x + width/2 - width/12, y, width/2 + width/6, height/2);
         g.fillPolygon(triangleX, triangleY, triangleX.length);
@@ -174,156 +214,136 @@ public class SpadajaceElementy<object> extends JPanel implements MouseListener {
 
     public Dimension getPreferredSize() {
         return new Dimension(D_WIDTH, D_HEIGHT);
-
-    }
-
-    private List<String> createColorList() {
-        List<String> color = new ArrayList<String>();
-
-        color.add("T");
-        color.add("U");
-        color.add("K");
-        color.add("J");
-        color.add("E");
-
-        return color;
     }
 
     private List<Shape> createShapeList() {
+
         List<Shape> list = new ArrayList<>();
         Random random = new Random();
-        poziom1.removeAll(poziom1);
+        level.removeAll(level);
 
         if ((word1)||(word4)||(word6)) {
+
             List<String> poziom1_letters_list = new ArrayList<String>(Arrays.asList(letters));
+
             poziom1_letters_list.remove("O");
             poziom1_letters_list.remove("M");
             poziom1_letters_list.remove("H");
             poziom1_letters_list.remove("S");
 
             for (int i = 0; i < 3; i++) {
-                poziom1.add(poziom1_letters_list.get(random.nextInt(poziom1_letters_list.size())));
+                level.add(poziom1_letters_list.get(random.nextInt(poziom1_letters_list.size())));
             }
-            poziom1.add("O");
+            level.add("O");
             for (int i = 4; i < 7; i++) {
-                poziom1.add(poziom1_letters_list.get(random.nextInt(poziom1_letters_list.size())));
+                level.add(poziom1_letters_list.get(random.nextInt(poziom1_letters_list.size())));
             }
-            poziom1.add("M");
+            level.add("M");
             for (int i = 8; i < 11; i++) {
-                poziom1.add(poziom1_letters_list.get(random.nextInt(poziom1_letters_list.size())));
+                level.add(poziom1_letters_list.get(random.nextInt(poziom1_letters_list.size())));
             }
-            poziom1.add("H");
+            level.add("H");
 
-            System.out.println(poziom1);
-            ilosc_kulek = poziom1.size();
+            amount_sphere = level.size();
 
-            for (int i = 0; i < ilosc_kulek; i++) {
+            for (int i = 0; i < amount_sphere; i++) {
                 int randomDelayedStart = random.nextInt(50);
-                Color[] kolor = {Color.red, Color.blue, Color.pink, Color.cyan, Color.green, Color.gray};
-                int randszer = 60 * i + 60;
+                Color[] kolor = {color1, color2, color3, color4, color5, color6};
+                int randszer = 75 * i + 55;
                 int x = random.nextInt(kolor.length);
-                int y = random.nextInt(letters.length);
-                list.add(new Shape(randszer, randomDelayedStart, kolor[x], poziom1.get(i), i));
-                System.out.println(y);
+                list.add(new Shape(randszer, randomDelayedStart, kolor[x], level.get(i), i));
             }
         }
         if ((word2)||(word5)){
-            poziom1.removeAll(poziom1);
+
             List<String> poziom1_letters_list = new ArrayList<String>(Arrays.asList(letters));
+
             poziom1_letters_list.remove("L");
             poziom1_letters_list.remove("S");
             poziom1_letters_list.remove("O");
             poziom1_letters_list.remove("M");
-            for (int i = 0; i < 5; i++) {
-                poziom1.add(poziom1_letters_list.get(random.nextInt(poziom1_letters_list.size())));
-            }
-            poziom1.add("S");
-            for (int i = 6; i < 11; i++) {
-                poziom1.add(poziom1_letters_list.get(random.nextInt(poziom1_letters_list.size())));
-            }
-            poziom1.add("L");
-            System.out.println("wyraz 2 lub 5 " + poziom1);
-            ilosc_kulek = poziom1.size();
 
-            for (int i = 0; i < ilosc_kulek; i++) {
+            for (int i = 0; i < 5; i++) {
+                level.add(poziom1_letters_list.get(random.nextInt(poziom1_letters_list.size())));
+            }
+            level.add("S");
+            for (int i = 6; i < 11; i++) {
+                level.add(poziom1_letters_list.get(random.nextInt(poziom1_letters_list.size())));
+            }
+            level.add("L");
+
+            amount_sphere = level.size();
+
+            for (int i = 0; i < amount_sphere; i++) {
                 int randomDelayedStart = random.nextInt(50);
-                Color[] kolor = {Color.red, Color.blue, Color.pink, Color.cyan, Color.green, Color.gray};
-                int randszer =  60* i + 60;
+                Color[] kolor = {color1, color2, color3, color4, color5, color6};
+                int randszer =  75 * i + 55;
                 int x = random.nextInt(kolor.length);
-                int y = random.nextInt(letters.length);
-                list.add(new Shape(randszer, randomDelayedStart, kolor[x], poziom1.get(i), i));
-                System.out.println(y);
+                list.add(new Shape(randszer, randomDelayedStart, kolor[x], level.get(i), i));
             }
         }
         if ((word3)||(word8)) {
+
             List<String> poziom1_letters_list = new ArrayList<String>(Arrays.asList(letters));
+
             poziom1_letters_list.remove("O");
             poziom1_letters_list.remove("R");
             poziom1_letters_list.remove("S");
             poziom1_letters_list.remove("L");
+
             for (int i = 0; i < 5; i++) {
-                poziom1.add(poziom1_letters_list.get(random.nextInt(poziom1_letters_list.size())));
+                level.add(poziom1_letters_list.get(random.nextInt(poziom1_letters_list.size())));
             }
-            poziom1.add("O");
+            level.add("O");
             for (int i = 6; i < 8; i++) {
-                poziom1.add(poziom1_letters_list.get(random.nextInt(poziom1_letters_list.size())));
+                level.add(poziom1_letters_list.get(random.nextInt(poziom1_letters_list.size())));
             }
-            poziom1.add("S");
+            level.add("S");
             for (int i = 9; i < 12; i++) {
-                poziom1.add(poziom1_letters_list.get(random.nextInt(poziom1_letters_list.size())));
+                level.add(poziom1_letters_list.get(random.nextInt(poziom1_letters_list.size())));
             }
 
-            System.out.println(poziom1);
-            ilosc_kulek = poziom1.size();
+            amount_sphere = level.size();
 
+            for (int i = 0; i < amount_sphere; i++) {
 
-            for (int i = 0; i < ilosc_kulek; i++) {
                 int randomDelayedStart = random.nextInt(50);
-                Color[] kolor = {Color.red, Color.blue, Color.pink, Color.cyan, Color.green, Color.gray};
-
-                int randszer = 60 * i + 60;
+                Color[] kolor = {color1, color2, color3, color4, color5, color6};
+                int randszer = 75 * i + 55;
                 int x = random.nextInt(kolor.length);
-                int y = random.nextInt(letters.length);
-
-                list.add(new Shape(randszer, randomDelayedStart, kolor[x], poziom1.get(i), i));
-
-                System.out.println(y);
+                list.add(new Shape(randszer, randomDelayedStart, kolor[x], level.get(i), i));
             }
-
         }
+
         if ((word7)||(word9)) {
+
             List<String> poziom1_letters_list = new ArrayList<String>(Arrays.asList(letters));
+
             poziom1_letters_list.remove("R");
             poziom1_letters_list.remove("A");
             poziom1_letters_list.remove("H");
             poziom1_letters_list.remove("O");
+
             for (int i = 0; i < 3; i++) {
-                poziom1.add(poziom1_letters_list.get(random.nextInt(poziom1_letters_list.size())));
+                level.add(poziom1_letters_list.get(random.nextInt(poziom1_letters_list.size())));
             }
-            poziom1.add("A");
+            level.add("A");
             for (int i = 4; i < 6; i++) {
-                poziom1.add(poziom1_letters_list.get(random.nextInt(poziom1_letters_list.size())));
+                level.add(poziom1_letters_list.get(random.nextInt(poziom1_letters_list.size())));
             }
-            poziom1.add("R");
+            level.add("R");
             for (int i = 7; i < 12; i++) {
-                poziom1.add(poziom1_letters_list.get(random.nextInt(poziom1_letters_list.size())));
+                level.add(poziom1_letters_list.get(random.nextInt(poziom1_letters_list.size())));
             }
 
-            System.out.println(poziom1);
-            ilosc_kulek = poziom1.size();
+            amount_sphere = level.size();
 
-
-            for (int i = 0; i < ilosc_kulek; i++) {
+            for (int i = 0; i < amount_sphere; i++) {
                 int randomDelayedStart = random.nextInt(50);
-                Color[] kolor = {Color.red, Color.blue, Color.pink, Color.cyan, Color.green, Color.gray};
-
-                int randszer = 60 * i + 60;
+                Color[] kolor = {color1, color2, color3, color4, color5, color6};
+                int randszer = 75 * i + 55;
                 int x = random.nextInt(kolor.length);
-                int y = random.nextInt(letters.length);
-
-                list.add(new Shape(randszer, randomDelayedStart, kolor[x], poziom1.get(i), i));
-
-                System.out.println(y);
+                list.add(new Shape(randszer, randomDelayedStart, kolor[x], level.get(i), i));
             }
         }
         return list;
@@ -366,7 +386,7 @@ public class SpadajaceElementy<object> extends JPanel implements MouseListener {
     class Shape {
 
         int randszer;
-        int y = 0;
+        int y = 45;
         int randomDelayedStart;
         boolean draw = false;
         Color color;
@@ -387,34 +407,32 @@ public class SpadajaceElementy<object> extends JPanel implements MouseListener {
 
             if (draw) {
                 g.setColor(color);
-
                 FontMetrics fm = g.getFontMetrics();
                 double textWidth = fm.getStringBounds(r, g).getWidth();
                 g.fillOval(randszer, y, 60, 60);
                 Graphics2D g2 = (Graphics2D) g;
                 g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
                 g.setColor(Color.WHITE);
-                g.setFont(new Font("Bauhaus 93", Font.LAYOUT_NO_LIMIT_CONTEXT, 35));
+                g.setFont(new Font("Bauhaus 93", Font.LAYOUT_NO_LIMIT_CONTEXT, 40));
                 g.drawString(letters, (int) (randszer + 25 - textWidth / 4), (y + 29 + fm.getMaxAscent() / 4));
             }
         }
 
         public void sprawdzenie() throws IOException {
 
-
             if (level1) {
-                poziom.setText("POZIOM 1");
+                jl_level.setText("POZIOM 1");
             }
             if (level2) {
-                poziom.setText("POZIOM 2");
+                jl_level.setText("POZIOM 2");
             }
 
             if (word1) {
                 if ((clickX >= randszer) && (clickX <= randszer + 60) && (clickY >= y) && (clickY <= y + 60)) {
-                    if ((poziom1.get(i).equals("O"))) {
+                    if ((level.get(i).equals("O"))) {
 
                         a += 1;
-                        punkty.setText("PUNKTY " + a);
+                        points.setText("PUNKTY " + a);
                         System.out.println("punkt "+a);
 
                         try {
@@ -428,20 +446,23 @@ public class SpadajaceElementy<object> extends JPanel implements MouseListener {
                         word2 = true;
                         WORD.setText("BA_L");
                         word1 = false;
-                        jpegi.remove(picLabel1);
-                        jpegi.add(picLabel2);
+                        pictures.remove(picLabel1);
+                        LocalDateTime then = LocalDateTime.now();
+                        pictures.add(picLabel2);
                     }
-                    if ((!poziom1.get(i).equals("O"))) {
+                    if ((!level.get(i).equals("O"))) {
                         a -= 1;
                         b += 1;
                         System.out.println("suma przy odej " + a);
-                        punkty.setText("PUNKTY " + a);
-                        try {
-                            Clip clip = AudioSystem.getClip();
-                            clip.open(AudioSystem.getAudioInputStream(new File("C:\\Users\\HP NoteBook\\IdeaProjects\\Falling Letters\\negatywny.wav")));
-                            clip.start();
-                        } catch (Exception exc) {
-                            exc.printStackTrace(System.out);
+                        points.setText("PUNKTY " + a);
+                        if(b!=3){
+                            try {
+                                Clip clip = AudioSystem.getClip();
+                                clip.open(AudioSystem.getAudioInputStream(new File("C:\\Users\\HP NoteBook\\IdeaProjects\\Falling Letters\\negatywny.wav")));
+                                clip.start();
+                            } catch (Exception exc) {
+                                exc.printStackTrace(System.out);
+                            }
                         }
                     }
                 }
@@ -449,10 +470,10 @@ public class SpadajaceElementy<object> extends JPanel implements MouseListener {
 
             if (word2) {
                 if ((clickX >= randszer) && (clickX <= randszer + 60) && (clickY >= y) && (clickY <= y + 60)) {
-                    if ((poziom1.get(i).equals("L"))) {
+                    if ((level.get(i).equals("L"))) {
 
                             a += 1;
-                            punkty.setText("PUNKTY " + a);
+                        points.setText("PUNKTY " + a);
 
                         try {
                             Clip clip = AudioSystem.getClip();
@@ -465,20 +486,23 @@ public class SpadajaceElementy<object> extends JPanel implements MouseListener {
                         word3 = true;
                         WORD.setText("_KI");
                         word2 = false;
-                        jpegi.remove(picLabel2);
-                        jpegi.add(picLabel3);
+                        pictures.remove(picLabel2);
+                        pictures.add(picLabel3);
                     }
-                    if ((!poziom1.get(i).equals("L"))&&(!poziom1.get(i).equals("O"))) {
+                    if ((!level.get(i).equals("L"))&&(!level.get(i).equals("O"))) {
 
                         a -= 1;
-                        punkty.setText("PUNKTY " + a);
+                        b += 1;
+                        points.setText("PUNKTY " + a);
 
-                        try {
-                            Clip clip = AudioSystem.getClip();
-                            clip.open(AudioSystem.getAudioInputStream(new File("C:\\Users\\HP NoteBook\\IdeaProjects\\Falling Letters\\negatywny.wav")));
-                            clip.start();
-                        } catch (Exception exc) {
-                            exc.printStackTrace(System.out);
+                        if(b!=3){
+                            try {
+                                Clip clip = AudioSystem.getClip();
+                                clip.open(AudioSystem.getAudioInputStream(new File("C:\\Users\\HP NoteBook\\IdeaProjects\\Falling Letters\\negatywny.wav")));
+                                clip.start();
+                            } catch (Exception exc) {
+                                exc.printStackTrace(System.out);
+                            }
                         }
                     }
                 }
@@ -486,10 +510,10 @@ public class SpadajaceElementy<object> extends JPanel implements MouseListener {
 
             if (word3) {
                 if ((clickX >= randszer) && (clickX <= randszer + 60) && (clickY >= y) && (clickY <= y + 60)) {
-                    if ((poziom1.get(i).equals("S"))) {
+                    if ((level.get(i).equals("S"))) {
 
                         a += 1;
-                        punkty.setText("PUNKTY " + a);
+                        points.setText("PUNKTY " + a);
                         WORD.setText("SKI");
                         level2 = true;
                         word4 = true;
@@ -502,19 +526,22 @@ public class SpadajaceElementy<object> extends JPanel implements MouseListener {
                         } catch (Exception exc) {
                             exc.printStackTrace(System.out);
                         }
-                        jpegi.remove(picLabel3);
-                        jpegi.add(picLabel4);
+                        pictures.remove(picLabel3);
+                        pictures.add(picLabel4);
                         WORD.setText("_OU_E");
                     }
-                    if ((!poziom1.get(i).equals("S"))&&(!poziom1.get(i).equals("L"))) {
+                    if ((!level.get(i).equals("S"))&&(!level.get(i).equals("L"))) {
                         a -= 1;
-                        punkty.setText("PUNKTY " + a);
-                        try {
-                            Clip clip = AudioSystem.getClip();
-                            clip.open(AudioSystem.getAudioInputStream(new File("C:\\Users\\HP NoteBook\\IdeaProjects\\Falling Letters\\negatywny.wav")));
-                            clip.start();
-                        } catch (Exception exc) {
-                            exc.printStackTrace(System.out);
+                        b += 1;
+                        points.setText("PUNKTY " + a);
+                        if(b!=3){
+                            try {
+                                Clip clip = AudioSystem.getClip();
+                                clip.open(AudioSystem.getAudioInputStream(new File("C:\\Users\\HP NoteBook\\IdeaProjects\\Falling Letters\\negatywny.wav")));
+                                clip.start();
+                            } catch (Exception exc) {
+                                exc.printStackTrace(System.out);
+                            }
                         }
                     }
                 }
@@ -522,9 +549,9 @@ public class SpadajaceElementy<object> extends JPanel implements MouseListener {
 
             if (word4) {
                 if ((clickX >= randszer) && (clickX <= randszer + 60) && (clickY >= y) && (clickY <= y + 60)) {
-                    if ((poziom1.get(i).equals("M"))) {
+                    if ((level.get(i).equals("M"))) {
                         a += 1;
-                        punkty.setText("PUNKTY " + a);
+                        points.setText("PUNKTY " + a);
                         WORD.setText("MOU_E");
                         try {
                             Clip clip = AudioSystem.getClip();
@@ -536,26 +563,29 @@ public class SpadajaceElementy<object> extends JPanel implements MouseListener {
                         word5 = true;
                         word4=false;
                     }
-                    if(!poziom1.get(i).equals("M")&&(!poziom1.get(i).equals("S"))){
+                    if(!level.get(i).equals("M")&&(!level.get(i).equals("S"))){
 
                         a -= 1;
-                        punkty.setText("PUNKTY " + a);
+                        b += 1;
+                        points.setText("PUNKTY " + a);
 
-                        try {
-                            Clip clip = AudioSystem.getClip();
-                            clip.open(AudioSystem.getAudioInputStream(new File("C:\\Users\\HP NoteBook\\IdeaProjects\\Falling Letters\\negatywny.wav")));
-                            clip.start();
-                        } catch (Exception exc) {
-                            exc.printStackTrace(System.out);
+                        if(b!=3){
+                            try {
+                                Clip clip = AudioSystem.getClip();
+                                clip.open(AudioSystem.getAudioInputStream(new File("C:\\Users\\HP NoteBook\\IdeaProjects\\Falling Letters\\negatywny.wav")));
+                                clip.start();
+                            } catch (Exception exc) {
+                                exc.printStackTrace(System.out);
+                            }
                         }
                     }
                 }
             }
             if (word5) {
                 if ((clickX >= randszer) && (clickX <= randszer + 60) && (clickY >= y) && (clickY <= y + 60)) {
-                    if ((poziom1.get(i) == "S")) {
+                    if ((level.get(i).equals("S"))) {
                         a += 1;
-                        punkty.setText("PUNKTY " + a);
+                        points.setText("PUNKTY " + a);
                         try {
                             Clip clip = AudioSystem.getClip();
                             clip.open(AudioSystem.getAudioInputStream(new File("C:\\Users\\HP NoteBook\\IdeaProjects\\Falling Letters\\pozytywny.wav")));
@@ -567,20 +597,23 @@ public class SpadajaceElementy<object> extends JPanel implements MouseListener {
                         word6 = true;
                         word5=false;
                         WORD.setText("C_ER_Y");
-                        jpegi.remove(picLabel4);
-                        jpegi.add(picLabel5);
+                        pictures.remove(picLabel4);
+                        pictures.add(picLabel5);
                     }
-                    if(!poziom1.get(i).equals("S")&&(!poziom1.get(i).equals("M"))){
+                    if(!level.get(i).equals("S")&&(!level.get(i).equals("M"))){
 
                         a -= 1;
-                        punkty.setText("PUNKTY " + a);
+                        b += 1;
+                        points.setText("PUNKTY " + a);
 
-                        try {
-                            Clip clip = AudioSystem.getClip();
-                            clip.open(AudioSystem.getAudioInputStream(new File("C:\\Users\\HP NoteBook\\IdeaProjects\\Falling Letters\\negatywny.wav")));
-                            clip.start();
-                        } catch (Exception exc) {
-                            exc.printStackTrace(System.out);
+                        if(b!=3){
+                            try {
+                                Clip clip = AudioSystem.getClip();
+                                clip.open(AudioSystem.getAudioInputStream(new File("C:\\Users\\HP NoteBook\\IdeaProjects\\Falling Letters\\negatywny.wav")));
+                                clip.start();
+                            } catch (Exception exc) {
+                                exc.printStackTrace(System.out);
+                            }
                         }
                     }
                 }
@@ -588,9 +621,9 @@ public class SpadajaceElementy<object> extends JPanel implements MouseListener {
 
                 if (word6) {
                     if ((clickX >= randszer) && (clickX <= randszer + 60) && (clickY >= y) && (clickY <= y + 60)) {
-                        if ((poziom1.get(i) == "H")) {
+                        if ((level.get(i).equals("H"))) {
                             a += 1;
-                            punkty.setText("PUNKTY " + a);
+                            points.setText("PUNKTY " + a);
                             try {
                                 Clip clip = AudioSystem.getClip();
                                 clip.open(AudioSystem.getAudioInputStream(new File("C:\\Users\\HP NoteBook\\IdeaProjects\\Falling Letters\\pozytywny.wav")));
@@ -602,26 +635,29 @@ public class SpadajaceElementy<object> extends JPanel implements MouseListener {
                             word6=false;
                             word7 = true;
                         }
-                        if(!poziom1.get(i).equals("H")&&(!poziom1.get(i).equals("S"))){
+                        if(!level.get(i).equals("H")&&(!level.get(i).equals("S"))){
 
                             a -= 1;
-                            punkty.setText("PUNKTY " + a);
+                            b += 1;
+                            points.setText("PUNKTY " + a);
 
-                            try {
-                                Clip clip = AudioSystem.getClip();
-                                clip.open(AudioSystem.getAudioInputStream(new File("C:\\Users\\HP NoteBook\\IdeaProjects\\Falling Letters\\negatywny.wav")));
-                                clip.start();
-                            } catch (Exception exc) {
-                                exc.printStackTrace(System.out);
+                            if(b!=3){
+                                try {
+                                    Clip clip = AudioSystem.getClip();
+                                    clip.open(AudioSystem.getAudioInputStream(new File("C:\\Users\\HP NoteBook\\IdeaProjects\\Falling Letters\\negatywny.wav")));
+                                    clip.start();
+                                } catch (Exception exc) {
+                                    exc.printStackTrace(System.out);
+                                }
                             }
                         }
                     }
                 }
                 if (word7) {
                     if ((clickX >= randszer) && (clickX <= randszer + 60) && (clickY >= y) && (clickY <= y + 60)) {
-                        if ((poziom1.get(i) == "R")) {
+                        if ((level.get(i).equals("R"))) {
                             a += 1;
-                            punkty.setText("PUNKTY " + a);
+                            points.setText("PUNKTY " + a);
                             try {
                                 Clip clip = AudioSystem.getClip();
                                 clip.open(AudioSystem.getAudioInputStream(new File("C:\\Users\\HP NoteBook\\IdeaProjects\\Falling Letters\\pozytywny.wav")));
@@ -634,20 +670,23 @@ public class SpadajaceElementy<object> extends JPanel implements MouseListener {
                             word8 = true;
                             WORD.setText("C_LL_R");
 
-                            jpegi.remove(picLabel5);
-                            jpegi.add(picLabel6);
+                            pictures.remove(picLabel5);
+                            pictures.add(picLabel6);
                         }
-                        if(!poziom1.get(i).equals("R")&&(!poziom1.get(i).equals("H"))){
+                        if(!level.get(i).equals("R")&&(!level.get(i).equals("H"))){
 
                             a -= 1;
-                            punkty.setText("PUNKTY " + a);
+                            b += 1;
+                            points.setText("PUNKTY " + a);
 
-                            try {
-                                Clip clip = AudioSystem.getClip();
-                                clip.open(AudioSystem.getAudioInputStream(new File("C:\\Users\\HP NoteBook\\IdeaProjects\\Falling Letters\\negatywny.wav")));
-                                clip.start();
-                            } catch (Exception exc) {
-                                exc.printStackTrace(System.out);
+                            if(b!=3){
+                                try {
+                                    Clip clip = AudioSystem.getClip();
+                                    clip.open(AudioSystem.getAudioInputStream(new File("C:\\Users\\HP NoteBook\\IdeaProjects\\Falling Letters\\negatywny.wav")));
+                                    clip.start();
+                                } catch (Exception exc) {
+                                    exc.printStackTrace(System.out);
+                                }
                             }
                         }
                     }
@@ -655,9 +694,9 @@ public class SpadajaceElementy<object> extends JPanel implements MouseListener {
 
                 if (word8) {
                     if ((clickX >= randszer) && (clickX <= randszer + 60) && (clickY >= y) && (clickY <= y + 60)) {
-                        if ((poziom1.get(i) == "O")) {
+                        if ((level.get(i).equals("O"))) {
                             a += 1;
-                            punkty.setText("PUNKTY " + a);
+                            points.setText("PUNKTY " + a);
                             try {
                                 Clip clip = AudioSystem.getClip();
                                 clip.open(AudioSystem.getAudioInputStream(new File("C:\\Users\\HP NoteBook\\IdeaProjects\\Falling Letters\\pozytywny.wav")));
@@ -669,59 +708,85 @@ public class SpadajaceElementy<object> extends JPanel implements MouseListener {
                             word8 = false;
                             word9 = true;
                         }
-                        if(!poziom1.get(i).equals("O")&&(!poziom1.get(i).equals("R"))){
+                        if(!level.get(i).equals("O")&&(!level.get(i).equals("R"))){
 
                             a -= 1;
-                            punkty.setText("PUNKTY " + a);
+                            b += 1;
+                            points.setText("PUNKTY " + a);
 
-                            try {
-                                Clip clip = AudioSystem.getClip();
-                                clip.open(AudioSystem.getAudioInputStream(new File("C:\\Users\\HP NoteBook\\IdeaProjects\\Falling Letters\\negatywny.wav")));
-                                clip.start();
-                            } catch (Exception exc) {
-                                exc.printStackTrace(System.out);
+                            if(b!=3){
+                                try {
+                                    Clip clip = AudioSystem.getClip();
+                                    clip.open(AudioSystem.getAudioInputStream(new File("C:\\Users\\HP NoteBook\\IdeaProjects\\Falling Letters\\negatywny.wav")));
+                                    clip.start();
+                                } catch (Exception exc) {
+                                    exc.printStackTrace(System.out);
+                                }
                             }
                         }
                     }
                 }
                 if (word9) {
                     if ((clickX >= randszer) && (clickX <= randszer + 60) && (clickY >= y) && (clickY <= y + 60)) {
-                        if ((poziom1.get(i) == "A")) {
+                        if ((level.get(i).equals("A"))) {
 
                             a += 1;
-                            try {
-                                Clip clip = AudioSystem.getClip();
-                                clip.open(AudioSystem.getAudioInputStream(new File("C:\\Users\\HP NoteBook\\IdeaProjects\\Falling Letters\\pozytywny.wav")));
-                                clip.start();
-                            } catch (Exception exc) {
-                                exc.printStackTrace(System.out);
-                            }
-                            punkty.setText("PUNKTY " + a);
+
+                            points.setText("PUNKTY " + a);
                             WORD.setText("COLLAR");
                             word9 = false;
+                            endgame = true;
                         }
-                        if(!poziom1.get(i).equals("A")&&(!poziom1.get(i).equals("O"))){
+                        if(!level.get(i).equals("A")&&(!level.get(i).equals("O"))){
 
                             a -= 1;
-                            punkty.setText("PUNKTY " + a);
+                            b += 1;
+                            points.setText("PUNKTY " + a);
 
-                            try {
-                                Clip clip = AudioSystem.getClip();
-                                clip.open(AudioSystem.getAudioInputStream(new File("C:\\Users\\HP NoteBook\\IdeaProjects\\Falling Letters\\negatywny.wav")));
-                                clip.start();
-                            } catch (Exception exc) {
-                                exc.printStackTrace(System.out);
+                            if(b!=3){
+                                try {
+                                    Clip clip = AudioSystem.getClip();
+                                    clip.open(AudioSystem.getAudioInputStream(new File("C:\\Users\\HP NoteBook\\IdeaProjects\\Falling Letters\\negatywny.wav")));
+                                    clip.start();
+                                } catch (Exception exc) {
+                                    exc.printStackTrace(System.out);
+                                }
                             }
                         }
                     }
                 }
+            if(endgame){
+                inscr.setText("KONIEC GRY");
+                result.setText("Twój wynik to "+a+"/9");
+                chance.setText("");
+                points.setText("");
+                WORD.setText("");
+                jl_level.setText("");
+                pictures.remove(picLabel6);
+                pictures.add(picLabel7);
+                try {
+                    Clip clip = AudioSystem.getClip();
+                    clip.open(AudioSystem.getAudioInputStream(new File("C:\\Users\\HP NoteBook\\IdeaProjects\\Falling Letters\\game-complete.wav")));
+                    clip.start();
+                } catch (Exception exc) {
+                    exc.printStackTrace(System.out);
+                }
+            }
         }
 
 
         public void move() {
             if (draw) {
                 y += INCREMENT;
+                if(y>=600){
+                    y = 45;
+                    y += INCREMENT;
+                    if(randszer == 55){
+                        b += 1;
+                    }
+                }
             }
+
         }
 
         public void decreaseDelay() {
